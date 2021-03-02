@@ -1,6 +1,15 @@
 # newman-reporter-allure
 A newman reporter for generating nice and clean report using Allure-js framework
 
+## TL;DR
+
+```sh-session
+$ npm install --global newman @felipecrs/newman-reporter-allure
+$ newman run https://www.getpostman.com/collections/d48ca7a0e871d2f530e2 --reporters cli,@felipecrs/allure --reporter-@felipecrs/allure-collection-as-parent-suite
+$ allure generate --clean
+$ npx serve allure-report
+```
+
 ## Installation
 ```console
 $ npm install -g newman-reporter-allure
