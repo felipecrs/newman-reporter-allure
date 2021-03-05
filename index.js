@@ -6,6 +6,10 @@ const Stage = require("allure-js-commons").Allure;
 const createHash = require("crypto").createHash;
 const _ = require("lodash");
 const html = String.raw;
+const fs = require("fs");
+const prismjs = require("prismjs");
+require("prismjs/components/prism-json");
+
 // const WrappedStep = require("./src/WrappedStep");
 
 class AllureReporter {
@@ -141,11 +145,13 @@ class AllureReporter {
     this.runningItems[this.runningItems.length - 1].pm_item.request_data = {
       url: url,
       method: req.method,
+      headers: req.headers.members,
       body: req.body,
     };
     this.runningItems[this.runningItems.length - 1].pm_item.response_data = {
       status: args.response.status,
       code: args.response.code,
+      headers: args.response.headers.members,
       body: resp_body,
     };
   }
@@ -425,8 +431,26 @@ class AllureReporter {
       testDescription = "";
     }
 
+    const language = "json";
+
+    const prismCode = prismjs.highlight(
+      bodyModePropObj,
+      Prism.languages[language],
+      language
+    );
+
     this.setDescriptionHtml(
-      html`<p style="color:MediumPurple;"> <b> ${testDescription} </b> </p> <h4 style="color:DodgerBlue;"><b><i>Request:</i></b></h4> <p style="color:DodgerBlue"> <b> ${requestDataURL} </b> </p> ${reqTableStr} </p> <h4 style="color:DodgerBlue;"> <b> <i> Response: </i> </b> </h4> <p style="color:DodgerBlue"> <b> ${responseCodeStatus} </b> </p> <p > <pre style="color:Orange;"> <b> ${rItem.pm_item.response_data.body} </b> </pre> </p>`
+      html`<div>
+        <style type="text/css">
+          ${fs.readFileSync(`${__dirname}/contrib/prism.css`)};
+        </style>
+        <pre
+          class="line-numbers"
+        ><code class="language-${language}">${prismCode}</code></pre>
+        <script type="text/javascript">
+          ${fs.readFileSync(`${__dirname}/contrib/prism.js`)};
+        </script>
+      </div>`
     );
     if (rItem.pm_item.failedAssertions.length > 0) {
       const msg = this.escape(rItem.pm_item.failedAssertions.join(", "));
