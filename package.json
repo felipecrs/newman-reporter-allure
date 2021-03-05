@@ -4,6 +4,8 @@
   "description": "newman reporter for Allure",
   "main": "index.js",
   "scripts": {
+    "start": "scripts/start.sh",
+    "start:watch": "nodemon --exec scripts/start.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -21,8 +23,27 @@
   },
   "author": "Virender",
   "license": "ISC",
+  "files": [
+    "src"
+  ],
   "dependencies": {
     "allure-js-commons": "^2.0.0-beta.6",
+    "lit-html": "^1.3.0",
     "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "@felipecrs/newman-reporter-allure": ".",
+    "allure-commandline": "^2.13.8",
+    "newman": "^5.2.2",
+    "nodemon": "^2.0.7",
+    "serve": "^11.3.2"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "index.js",
+      "src",
+      "test/fixtures",
+      "scripts/start.sh"
+    ]
   }
 }
